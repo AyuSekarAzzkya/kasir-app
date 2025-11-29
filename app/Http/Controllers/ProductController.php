@@ -44,14 +44,6 @@ class ProductController extends Controller
             ->make(true);
     }
 
-
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $products = Products::where('name', 'LIKE', '%' . $query . '%')->get();
-        return view('admin.product.index', compact('products'));
-    }
-
     public function create()
     {
         $categories = Categories::all();
