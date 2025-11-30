@@ -85,6 +85,6 @@ class TransactionController extends Controller
         $transaction = Transactions::with('items.product', 'user')->findOrFail($id);
 
         $pdf = FacadePdf::loadView('transaction.print', compact('transaction'));
-        return $pdf->download('struk-' . $transaction->invoice_number . '.pdf');
+        return $pdf->stream('struk-' . $transaction->invoice_number . '.pdf');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -19,6 +20,8 @@ Route::get('/', function () {
 Route::post('/login/auth', [AuthController::class, 'loginAuth'])->name('login.auth');
 Route::get('/admin/products/by-code/{code}', [ProductController::class, 'getByCode']);
 Route::get('/transactions/print/{id}', [TransactionController::class, 'print'])->name('transaction.print');
+Route::get('transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
+Route::get('/transactions/{id}/detail', [TransactionController::class, 'detail'])->name('transactions.detail');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['role:admin'])->group(function () {
@@ -49,6 +52,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::delete('/admin/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
 
     Route::get('/report', [ReportController::class, 'index'])->name('admin.report.index');
+    Route::get('/admin/report/export', [ReportController::class, 'export'])->name('admin.report.export');
     Route::get('/transaction/{id}/detail', [ReportController::class, 'detail'])->name('transaction.detail');
 
     Route::post('/stock/in', [StockController::class, 'stockIn'])->name('stock.in');
@@ -67,9 +71,6 @@ Route::middleware(['role:admin'])->group(function () {
 });
 
 Route::middleware(['role:cashier'])->group(function () {
-
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
     Route::post('transactions/store', [TransactionController::class, 'store'])->name('transactions.store');
-    Route::get('transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
-    Route::get('/transactions/{id}/detail', [TransactionController::class, 'detail'])->name('transactions.detail');
 });

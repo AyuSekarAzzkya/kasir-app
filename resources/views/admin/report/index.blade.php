@@ -56,6 +56,13 @@
                 </form>
             </div>
         </div>
+        
+        <div class="col-md-2">
+            <label>&nbsp;</label>
+            <a href="{{ route('admin.report.export', request()->query()) }}" target="_blank" class="btn btn-success w-100">
+                Export Excel
+            </a>
+        </div>
 
         @include('admin.report.result', ['transactions' => $transactions])
 
@@ -67,6 +74,7 @@
     <script src="https://cdn.datatables.net/2.3.5/js/dataTables.bootstrap5.js"></script>
     <script>
         $('#datatable').DataTable();
+
         function updateFilter() {
             let type = document.getElementById('typeSelect').value;
 

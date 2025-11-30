@@ -107,15 +107,15 @@
                             <p>Transaksi</p>
                         </a>
                     </li>
-
-                    <li class="nav-item">
-                        <a href="{{ route('transactions.history') }}"
-                            class="{{ Request::routeIs('transactions.history') ? 'active' : '' }}">
-                            <i class="bi bi-clock-history"></i>
-                            <p>Riwayat Transaksi</p>
-                        </a>
-                    </li>
                 @endrole
+
+                <li class="nav-item">
+                    <a href="{{ route('transactions.history') }}"
+                        class="{{ Request::routeIs('transactions.history') ? 'active' : '' }}">
+                        <i class="bi bi-clock-history"></i>
+                        <p>Riwayat Transaksi</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
