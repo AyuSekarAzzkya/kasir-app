@@ -21,12 +21,12 @@
             <div class="col-md-3">
                 <div class="alert alert-warning">
                     <strong>Total Barang Terjual:</strong><br>
-                    {{ \App\Models\TransactionItems::whereIn('transactions_id', $transactions->pluck('id'))->sum('quantity') }}
+                    {{ TransactionItems::whereIn('transactions_id', $transactions->pluck('id'))->sum('quantity') }}
                 </div>
             </div>
         </div>
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="datatable">
             <thead class="bg-primary text-white">
                 <tr>
                     <th>#</th>

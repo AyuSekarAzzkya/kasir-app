@@ -63,7 +63,10 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.datatables.net/2.3.5/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.3.5/js/dataTables.bootstrap5.js"></script>
     <script>
+        $('#datatable').DataTable();
         function updateFilter() {
             let type = document.getElementById('typeSelect').value;
 

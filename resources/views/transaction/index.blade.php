@@ -8,13 +8,20 @@
                     <h3 class="fw-bold mb-1">Transaksi</h3>
                 </div>
             </div>
-            {{-- ========= MODAL SUCCESS TRANSAKSI ========= --}}
+
             @if (session('success'))
                 <div class="modal fade" id="successModal" tabindex="-1">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content text-center p-4">
                             <h4 class="text-success fw-bold">Transaksi Berhasil!</h4>
                             <p>{{ session('success') }}</p>
+
+                            @if (session('transaction_id'))
+                                <a href="{{ route('transaction.print', session('transaction_id')) }}" target="_blank"
+                                    class="btn btn-warning mt-2 w-100">
+                                    Print Struk PDF
+                                </a>
+                            @endif
 
                             <button class="btn btn-primary mt-3" data-bs-dismiss="modal">
                                 OK
@@ -24,18 +31,15 @@
                 </div>
             @endif
 
-
             <div class="row mt-1">
                 <div class="col-12">
 
-                    {{-- CARD INPUT TRANSAKSI --}}
                     <div class="card">
                         <div class="card-body">
 
                             <div class="col-md-12 order-md-1">
                                 <h4 class="mb-3">Input Transaksi</h4>
 
-                                {{-- Tidak pakai form submit karena keranjang memakai JS --}}
                                 <div class="form-group mb-3">
                                     <label for="code">Kode Produk</label>
                                     <input type="text" class="form-control" id="code" placeholder="PRD-00001">
@@ -56,6 +60,7 @@
                                     <div class="flex-fill">
                                         <label for="amount">Jumlah</label>
                                         <input type="number" class="form-control" id="amount" disabled>
+                                        <div id="stockAlert" class="text-danger mt-1" style="display: none;"></div>
                                     </div>
 
                                 </div>
@@ -68,10 +73,8 @@
                         </div>
                     </div>
 
-                    {{-- 2 CARD DIBAWAHNYA --}}
                     <div class="d-flex gap-3 mt-4">
 
-                        {{-- CARD DATA TRANSAKSI --}}
                         <div class="card flex-fill">
                             <div class="card-body">
                                 <h4 class="mb-3">Data Transaksi</h4>
@@ -97,7 +100,6 @@
                             </div>
                         </div>
 
-                        {{-- CARD PEMBAYARAN --}}
                         <div class="card" style="width: 350px;">
                             <div class="card-body">
                                 <h4 class="mb-3">Pembayaran</h4>
@@ -105,7 +107,6 @@
                                 <form action="{{ route('transactions.store') }}" method="POST">
                                     @csrf
 
-                                    {{-- DATA YANG DIKIRIM --}}
                                     <input type="hidden" name="cart" id="cartInput">
                                     <input type="hidden" name="total" id="paymentTotalReal">
                                     <input type="hidden" name="change" id="paymentChangeReal">
@@ -131,12 +132,9 @@
                                 </form>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -145,6 +143,7 @@
     <script>
         let cart = [];
         let total = 0;
+        let currentProductStock = 0;
 
         document.getElementById("code").addEventListener("keyup", function() {
             let code = this.value;
@@ -159,8 +158,22 @@
                         document.getElementById("priceProduct").value = data.price;
                         document.getElementById("amount").disabled = false;
                         window.currentProduct = data;
+                        currentProductStock = data.stock;
                     }
                 });
+        });
+
+        document.getElementById("amount").addEventListener("input", function() {
+            let qty = parseInt(this.value || 0);
+            const stockAlert = document.getElementById("stockAlert");
+
+            if (qty > currentProductStock) {
+                stockAlert.innerText = `Stok ${window.currentProduct.name} hanya tersisa ${currentProductStock}`;
+                stockAlert.style.display = "block";
+                this.value = currentProductStock;
+            } else {
+                stockAlert.style.display = "none";
+            }
         });
 
         document.getElementById("addCart").addEventListener("click", function() {
@@ -168,8 +181,11 @@
 
             if (!qty || qty <= 0) return alert("Masukkan jumlah produk!");
 
-            let p = window.currentProduct;
+            if (qty > currentProductStock) {
+                return alert(`Stok ${window.currentProduct.name} tidak cukup! Sisa stok: ${currentProductStock}`);
+            }
 
+            let p = window.currentProduct;
             let subtotal = p.price * qty;
 
             cart.push({
@@ -182,7 +198,10 @@
 
             total += subtotal;
             renderTable();
+
+            document.getElementById("amount").value = "";
         });
+
 
         function renderTable() {
             let tbody = document.getElementById("transactionTable");
@@ -206,7 +225,6 @@
             document.getElementById("cartInput").value = JSON.stringify(cart);
         }
 
-        // Hitung kembalian
         document.getElementById("paymentCash").addEventListener("keyup", function() {
             let bayar = parseInt(this.value || 0);
             let kembali = bayar - total;

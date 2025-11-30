@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Products;
 use App\Models\TransactionItems;
 use App\Models\Transactions;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
@@ -21,6 +23,18 @@ class TransactionController extends Controller
 
         if (!$cart || count($cart) == 0) {
             return back()->with('error', 'Cart kosong!');
+        }
+
+        foreach ($cart as $item) {
+            $product = Products::find($item['id']);
+
+            if (!$product) {
+                return back()->with("error", "Produk dengan ID {$item['id']} tidak ditemukan!");
+            }
+
+            if ($product->stock < $item['qty']) {
+                return back()->with("error", "Stok {$product->name} tidak mencukupi! Sisa stok: {$product->stock}");
+            }
         }
 
         $invoice = 'INV-' . time();
@@ -41,12 +55,15 @@ class TransactionController extends Controller
                 'quantity' => $item['qty'],
                 'subtotal' => $item['subtotal'],
             ]);
-            $product = Products::find($item['id']);
 
+            $product = Products::find($item['id']);
             $product->reduceStock($item['qty'], "Transaksi #{$transaction->invoice_number}");
         }
 
-        return back()->with('success', 'Transaksi berhasil disimpan!');
+        return redirect()->back()->with([
+            'success' => 'Transaksi berhasil diproses!',
+            'transaction_id' => $transaction->id
+        ]);
     }
 
     public function history()
@@ -55,10 +72,19 @@ class TransactionController extends Controller
 
         return view('transaction.history', compact('transactions'));
     }
+
     public function detail($id)
     {
         $transaction = Transactions::with('items.product')->findOrFail($id);
 
         return view('transaction.detail', compact('transaction'));
+    }
+
+    public function print($id)
+    {
+        $transaction = Transactions::with('items.product', 'user')->findOrFail($id);
+
+        $pdf = FacadePdf::loadView('transaction.print', compact('transaction'));
+        return $pdf->download('struk-' . $transaction->invoice_number . '.pdf');
     }
 }

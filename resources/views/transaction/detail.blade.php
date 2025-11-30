@@ -87,12 +87,11 @@
                                 </div>
 
                                 <div class="text-end mt-4">
-                                    <a href="{{ route('transactions.history') }}" class="btn btn-primary">
+                                    <a href="{{ route('transaction.print', $transaction->id) }}" class="btn btn-primary">
                                         Cetak Struk
                                     </a>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

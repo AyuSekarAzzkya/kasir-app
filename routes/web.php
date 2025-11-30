@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -15,6 +16,8 @@ Route::get('/', function () {
 });
 
 Route::post('/login/auth', [AuthController::class, 'loginAuth'])->name('login.auth');
+Route::get('/admin/products/by-code/{code}', [ProductController::class, 'getByCode']);
+Route::get('/transactions/print/{id}', [TransactionController::class, 'print'])->name('transaction.print');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['role:admin'])->group(function () {
@@ -33,7 +36,6 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin/products/{id}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
     Route::put('/admin/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
     Route::delete('/admin/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
-    Route::get('/admin/products/by-code/{code}', [ProductController::class, 'getByCode']);
 
     Route::get('/report', [ReportController::class, 'index'])->name('admin.report.index');
     Route::get('/transaction/{id}/detail', [ReportController::class, 'detail'])->name('transaction.detail');

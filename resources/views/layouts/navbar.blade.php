@@ -1,12 +1,18 @@
 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
     <div class="container-fluid">
 
+        <div class="navbar-text me-auto d-flex align-items-center">
+            <i class="bi bi-calendar-event me-3"></i>
+            <span id="currentDate" class="fw-bold text-secondary"></span>
+        </div>
+
         <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"></nav>
 
         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
 
             <li class="nav-item dropdown hidden-caret">
-                <a class="dropdown-toggle profile-pic d-flex align-items-center" data-bs-toggle="dropdown" href="#">
+                <a class="dropdown-toggle profile-pic d-flex align-items-center" data-bs-toggle="dropdown"
+                    href="#">
                     <div class="avatar-sm d-flex align-items-center justify-content-center rounded-circle bg-light">
                         <i class="bi bi-person-circle fs-4 text-secondary"></i>
                     </div>
@@ -22,7 +28,9 @@
                         <p class="mb-0 fw-bold">{{ Auth::user()->name }}</p>
                         <small class="text-muted">{{ Auth::user()->email }}</small>
                     </li>
-                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
 
                     {{-- Tombol Logout --}}
                     <li class="text-center px-3 pb-3">
@@ -39,3 +47,19 @@
         </ul>
     </div>
 </nav>
+@push('scripts')
+    <script>
+        function updateDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('currentDate').innerText = now.toLocaleDateString('id-ID', options);
+        }
+        updateDate();
+        setInterval(updateDate, 60 * 1000);
+    </script>
+@endpush
