@@ -2,8 +2,8 @@
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
             <a class="logo">
-                <img src="{{ asset('template') }}/assets/img/kaiadmin/kasirku.png" alt="navbar brand"
-                    class="navbar-brand" height="100"/>
+                <img src="{{ asset('template') }}/assets/img/kaiadmin/kasirku.png" alt="navbar brand" class="navbar-brand"
+                    height="100" />
             </a>
 
             <div class="nav-toggle">
@@ -81,6 +81,22 @@
                             <p>Stock</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('roles.index') }}"
+                            class="{{ Request::routeIs('roles.index') ? 'active' : '' }}">
+                            <i class="bi bi-person-fill-gear"></i>
+                            <p>Role</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('permissions.index') }}"
+                            class="{{ Request::routeIs('permissions.index') ? 'active' : '' }}">
+                            <i class="bi bi-person-fill"></i>
+                            <p>Permission</p>
+                        </a>
+                    </li>
                 @endrole
 
                 @role('cashier')
@@ -100,7 +116,6 @@
                         </a>
                     </li>
                 @endrole
-
             </ul>
         </div>
     </div>

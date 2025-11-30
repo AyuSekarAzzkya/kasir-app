@@ -21,7 +21,7 @@
             <div class="col-md-3">
                 <div class="alert alert-warning">
                     <strong>Total Barang Terjual:</strong><br>
-                    {{ TransactionItems::whereIn('transactions_id', $transactions->pluck('id'))->sum('quantity') }}
+                    {{ \App\Models\TransactionItems::whereIn('transactions_id', $transactions->pluck('id'))->sum('quantity') }}
                 </div>
             </div>
         </div>

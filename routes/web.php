@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -10,6 +9,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 
 Route::get('/', function () {
     return view('login');
@@ -21,6 +22,16 @@ Route::get('/transactions/print/{id}', [TransactionController::class, 'print'])-
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['role:admin'])->group(function () {
+
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::post('/roles/store', [RoleController::class, 'store'])->name('roles.store');
+    Route::put('/roles/{role}/update', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{role}/destroy', [RoleController::class, 'destroy'])->name('roles.destroy');
+
+    Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::post('/permissions/store', [PermissionController::class, 'store'])->name('permissions.store');
+    Route::put('/permissions/{permission}/update', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::delete('/permissions/{permission}/destroy', [PermissionController::class, 'destroy'])->name('permissions.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
