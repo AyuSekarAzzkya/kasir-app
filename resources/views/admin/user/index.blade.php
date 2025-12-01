@@ -134,7 +134,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <form method="POST" id="formEditCashier">
+                    <form id="formEditCashier" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -161,5 +161,30 @@
     <script src="https://cdn.datatables.net/2.3.5/js/dataTables.bootstrap5.js"></script>
     <script>
         $('#datatable').DataTable();
+
+        $(document).on('click', '.btn-delete', function() {
+            let id = $(this).data('id');
+
+            Swal.fire({
+                title: "Hapus Kasir?",
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formDelete' + id).submit();
+                }
+            });
+        });
+
+        // SET FORM EDIT
+        $(document).on('click', '.btn-edit', function() {
+            let id = $(this).data('id');
+            $('#editName').val($(this).data('name'));
+            $('#editEmail').val($(this).data('email'));
+            $('#formEditCashier').attr('action', '/users/' + id);
+        });
     </script>
 @endpush

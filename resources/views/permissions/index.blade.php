@@ -136,11 +136,23 @@
             $('#formEditPermission').attr('action', '/permissions/' + id + '/update');
         });
 
-        $('.btn-delete').click(function() {
+                $(document).on('click', '.btn-delete', function(e) {
+            e.preventDefault();
             let id = $(this).data('id');
-            if (confirm('Yakin ingin menghapus permission ini?')) {
-                $('#formDelete' + id).submit();
-            }
+
+            Swal.fire({
+                title: "Hapus Permission?",
+                text: "Role dan permission yang terkait akan hilang!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#formDelete' + id).submit();
+                }
+            });
         });
+
     </script>
 @endpush

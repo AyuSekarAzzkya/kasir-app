@@ -150,7 +150,6 @@
     <script>
         $('#datatable').DataTable();
 
-        // Set data di modal Edit
         $('.btn-edit').click(function() {
             let id = $(this).data('id');
             let name = $(this).data('name');
@@ -158,10 +157,8 @@
 
             $('#editRoleName').val(name);
 
-            // Reset semua checkbox
             $('.edit-permission').prop('checked', false);
 
-            // Cek permission sesuai role
             permissions.forEach(p => {
                 $(`.edit-permission[value="${p}"]`).prop('checked', true);
             });
@@ -169,12 +166,22 @@
             $('#formEditRole').attr('action', '/roles/' + id + '/update');
         });
 
-        // Hapus role
-        $('.btn-delete').click(function() {
+        $(document).on('click', '.btn-delete', function(e) {
+            e.preventDefault();
             let id = $(this).data('id');
-            if (confirm('Yakin ingin menghapus role ini?')) {
-                $('#formDelete' + id).submit();
-            }
+
+            Swal.fire({
+                title: "Hapus Role?",
+                text: "Role dan permission yang terkait akan hilang!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#formDelete' + id).submit();
+                }
+            });
         });
     </script>
 @endpush

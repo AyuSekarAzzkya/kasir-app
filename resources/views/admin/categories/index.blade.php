@@ -164,7 +164,19 @@
                 e.preventDefault();
 
                 const id = e.target.closest('.btn-delete').dataset.id;
-                document.getElementById('formDelete' + id).submit()
+
+                Swal.fire({
+                    title: "Hapus Data?",
+                    text: "Data yang dihapus tidak bisa dikembalikan!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, hapus!",
+                    cancelButtonText: "Batal"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('formDelete' + id).submit();
+                    }
+                });
             }
         });
     </script>

@@ -28,7 +28,30 @@ class AdminController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        $admin->assignRole('admin'); 
+        $admin->assignRole('admin');
         return back()->with('success', 'Admin berhasil ditambahkan');
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name'  => 'required',
+            'email' => 'required|email',
+        ]);
+
+        $admin = User::findOrFail($id);
+
+        $admin->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+        ]);
+
+        return redirect()->back()->with('success', 'Admin berhasil diperbarui');
+    }
+
+    public function destroy($id)
+    {
+        $admin = User::findOrFail($id);
+        $admin->delete();
+        return redirect()->back()->with('success', 'Admin berhasil dihapus');
     }
 }

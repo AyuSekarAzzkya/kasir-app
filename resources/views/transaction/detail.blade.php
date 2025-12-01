@@ -52,7 +52,7 @@
                                     <tbody>
                                         @foreach ($transaction->items as $item)
                                             <tr>
-                                                <td>{{ $item->product->name }}</td>
+                                                <td>{{ $item->product->name ?? 'Produk sudah dihapus' }}</td>
                                                 <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
                                                 <td>{{ $item->quantity }}</td>
                                                 <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>

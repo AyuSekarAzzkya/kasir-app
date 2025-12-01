@@ -101,7 +101,14 @@
                                     @forelse($logs as $log)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $log->product->name }}</td>
+                                            <td>
+                                                @if ($log->product)
+                                                    {{ $log->product->name }}
+                                                @else
+                                                    <span class="text-danger">Produk dihapus / tidak ditemukan</span>
+                                                @endif
+                                            </td>
+
                                             <td>
                                                 @if ($log->type == 'in')
                                                     <span class="badge bg-success">IN</span>

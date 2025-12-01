@@ -28,7 +28,31 @@ class CashierController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        $cashier->assignRole('cashier'); 
+        $cashier->assignRole('cashier');
         return back()->with('success', 'Kasir berhasil ditambahkan');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name'  => 'required',
+            'email' => 'required|email',
+        ]);
+
+        $cashier = User::findOrFail($id);
+
+        $cashier->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+        ]);
+
+        return redirect()->back()->with('success', 'Kasir berhasil diperbarui');
+    }
+
+    public function destroy($id)
+    {
+        $cashier = User::findOrFail($id);
+        $cashier->delete();
+        return redirect()->back()->with('success', 'Kasir berhasil dihapus');
     }
 }
